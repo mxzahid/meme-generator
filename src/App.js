@@ -1,23 +1,25 @@
-import logo from './logo.svg';
+import { useEffect,useState } from 'react';
 import './App.css';
+import Form from './components/Form';
 
+ 
 function App() {
+  const url = "https://api.imgflip.com/get_memes"
+  const [memeImages,setMemeImages] = useState([])
+
+  useEffect(()=>{
+    fetch(url)
+    .then((res)=>res.json())
+    .then((data)=> 
+        data["data"]["memes"].map((memeObj)=> setMemeImages((memeImages)=>[...memeImages,memeObj["url"]])))
+    .catch((err)=>console.error(err))
+  },[])
+
+  
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <Form memeImages={memeImages}/>
     </div>
   );
 }
